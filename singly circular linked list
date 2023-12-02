@@ -1,0 +1,248 @@
+# include <stdio.h>
+# include <stdlib.h>
+
+typedef struct node
+{
+    int data;
+    struct node * next;
+
+}NODE,*PNODE,**PPNODE;
+
+void InsertFirst(PPNODE Head , PPNODE Tail,int no)
+{
+    PNODE newn = NULL;
+    newn =(PNODE)malloc(sizeof(NODE));
+    newn -> data = no;
+    newn -> next = NULL;
+
+    if((*Head==NULL)&&(*Tail==NULL))
+    {
+        *Head = newn;
+        *Tail = newn;
+        (*Tail)->next = *Head;
+    }
+    else
+    {
+        newn -> next = *Head;
+        *Head = newn;
+        (*Tail)->next = *Head;
+    }
+
+}
+
+void InserLast(PPNODE Head,  PPNODE Tail , int no)
+{
+    PNODE newn = NULL;
+    newn =(PNODE)malloc(sizeof(NODE));
+    newn -> data = no;
+    newn -> next = NULL;
+    
+    if((*Head==NULL)&&(*Tail==NULL))
+    {
+        *Head = newn;
+        *Tail = newn;
+        (*Tail)->next = *Head;
+    }
+    else
+    {
+        (*Tail)->next = newn;
+        *Tail = newn;
+        (*Tail)->next = *Head;
+      
+    }
+
+}
+
+void DeleteFirst(PPNODE Head , PPNODE Tail)
+{
+    if((*Head==NULL)&&(*Tail==NULL))
+    {
+        return;
+    }
+    else if(*Head == *Tail)
+    {
+        free(*Head);
+        *Head = NULL;
+        *Tail = NULL;
+    }
+    else
+    {
+        *Head = (*Head)->next;
+        free((*Tail)->next);
+        (*Tail)->next = *Head;
+    }
+
+}
+
+void DeleteLast(PPNODE Head , PPNODE Tail)
+{
+    PNODE temp = *Head;
+
+    if((*Head==NULL)&&(*Tail==NULL))
+    {
+        return;
+    }
+    else if(*Head == *Tail)
+    {
+        free(*Head);
+        *Head = NULL;
+        *Tail = NULL;
+    }
+    else
+    {
+        while(temp->next->next!=*Head)
+        {
+            temp = temp->next;
+
+        }
+        free(*Tail);
+        *Tail = temp;
+        (*Tail)->next = *Head;
+    }
+
+
+}
+void Display(PNODE Head , PNODE Tail)
+{
+    printf("CONTENTS OF LINKED LIST ARE\n");
+
+    if((Head!=NULL)&&(Tail!=NULL))
+    {
+        do 
+        {
+            printf("|%d|->",Head->data);
+            Head = Head->next;
+
+        }while(Head!=Tail->next);
+        printf("Addressed of first node\n");
+    }
+}
+int Count(PNODE Head,PNODE Tail)
+{
+    int iCnt =  0;
+     if((Head!=NULL)&&(Tail!=NULL))
+    {
+        do 
+        {
+            iCnt++;
+            Head = Head->next;
+
+        }while(Head!=Tail->next);
+    }
+    return iCnt++;
+}
+
+void InsertAtPos(PPNODE Head , PPNODE Tail,int no,int iPos)
+{
+    int iSize = Count(*Head,*Tail);
+    int i =0;
+    PNODE newn = NULL;
+    newn = (PNODE)malloc(sizeof(NODE));
+    newn ->data = no;
+    newn ->next = NULL;
+        PNODE temp = *Head;
+    if((iPos<1)||(iPos>iSize+1))
+    {
+        printf("INVALID POSITION\n");
+        return;
+    }
+    if(iPos==1)
+    {
+        InsertFirst(Head,Tail,no);
+
+    }
+    else if(iPos==iSize+1)
+    {
+        InserLast(Head,Tail,no);
+    }
+    else
+    {
+        for(i=0;i<iPos-1;i++)
+        {
+            temp = temp->next;
+        }
+        newn->next =temp->next;
+        temp->next = newn;
+    }
+
+    
+}
+void DeleteAtPos(PPNODE Head , PPNODE Tail,int iPos)
+{
+    int iSize = Count(*Head,*Tail);
+    int i =0;
+     PNODE temp = *Head;
+     PNODE targetednode = NULL;
+    if((iPos<1)||(iPos>iSize))
+    {
+        printf("INVALID POSITION\n");
+        return;
+    }
+    if(iPos==1)
+    {
+        DeleteFirst(Head,Tail);
+
+    }
+    else if(iPos==iSize)
+    {
+       DeleteLast (Head,Tail);
+    }
+    else
+    {
+        for(i=0;i<iPos-1;i++)
+        {
+            temp = temp->next;
+        }
+        targetednode = temp->next;
+        temp->next = temp->next->next;
+        free(targetednode);
+
+        
+    }
+}
+int main()
+{
+
+
+PNODE First = NULL;
+PNODE Last = NULL;
+int iRet = 0;
+InsertFirst(&First,&Last,121);
+InsertFirst(&First,&Last,111);
+InsertFirst(&First,&Last,101);
+InsertFirst(&First,&Last,51);
+InsertFirst(&First,&Last,21);
+InsertFirst(&First,&Last,11);
+
+Display(First,Last);
+iRet = Count(First,Last);
+printf("NUMBER OF ELEMENTS OF LINKED LIST ARE %d:\n",iRet);
+
+InserLast(&First,&Last,151);
+Display(First,Last);
+iRet = Count(First,Last);
+printf("NUMBER OF ELEMENTS OF LINKED LIST ARE %d:\n",iRet);
+
+
+DeleteFirst(&First,&Last);
+Display(First,Last);
+iRet = Count(First,Last);
+printf("NUMBER OF ELEMENTS OF LINKED LIST ARE %d:\n",iRet);
+
+DeleteLast(&First,&Last);
+Display(First,Last);
+iRet = Count(First,Last);
+printf("NUMBER OF ELEMENTS OF LINKED LIST ARE %d:\n",iRet);
+
+InsertAtPos(&First,&Last,105,3);
+Display(First,Last);
+iRet = Count(First,Last);
+printf("NUMBER OF ELEMENTS OF LINKED LIST ARE %d:\n",iRet);
+
+DeleteAtPos(&First,&Last,3);
+Display(First,Last);
+iRet = Count(First,Last);
+printf("NUMBER OF ELEMENTS OF LINKED LIST ARE %d:\n",iRet);
+
+    return 0;
+}
